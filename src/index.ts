@@ -3,6 +3,7 @@ import { validate } from 'class-validator';
 import * as Sendgrid from '@sendgrid/mail';
 
 import { SendMailDto } from './send-mail.dto';
+import { fillTemplate } from './template';
 
 Sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -24,13 +25,25 @@ const httpTrigger: AzureFunction = async function (
     return;
   }
 
+  let html: string;
+
+  try {
+    html = fillTemplate(data, { code: '123 456' });
+  } catch (e) {
+    context.res = {
+      code: 500,
+    };
+
+    return;
+  }
+
   // Create mail message
   const msg = {
     to: data.to,
     from: 'test@example.com',
     subject: data.subject,
     text: data.text,
-    // html: '',
+    html,
   };
 
   // Send email

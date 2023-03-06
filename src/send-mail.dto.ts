@@ -1,4 +1,4 @@
-import { IsEmail, IsEnum, IsString } from 'class-validator';
+import { IsEmail, IsOptional, IsEnum, IsString } from 'class-validator';
 
 export enum TemplateType {
   VERIFICATION_CODE = 'VERIFICATION_CODE',
@@ -20,4 +20,8 @@ export class SendMailDto {
   @IsString()
   @IsEnum(TemplateType)
   readonly templateType: TemplateType;
+
+  @IsString()
+  @IsOptional()
+  readonly verificationCode: string;
 }
